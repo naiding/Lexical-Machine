@@ -1,8 +1,11 @@
-#!/usr/bin/python
 
-# mainwindow.py
+# -*- coding: utf-8 -*-   
 
 import sys
+from PyQt4.QtGui import *  
+from PyQt4.QtCore import *  
+  
+
 from PyQt4 import QtGui, QtCore
 import LMConfig
 
@@ -12,16 +15,27 @@ class MainWindow(QtGui.QMainWindow):
 
         # Window Configuration
         self.resize(640, 320)
+        font = QFont(self.tr("Arial"),10)  
+        QApplication.setFont(font)  
         self.setWindowTitle(LMConfig.APPLICATION_NAME)
         self.setWindowIcon(QtGui.QIcon(LMConfig.APPLICATION_ICON))
         self.statusBar().showMessage('Ready')
+        QThread.sleep(1)  
 
         # MenuBar Configuration
         self.configurate_menubar()
 
+        self.OpenLabel = QtGui.QLabel( "Open a C Source File To Begin :)" )
+        self.OpenLabel.setAlignment( QtCore.Qt.AlignCenter )
+        self.OpenLabel.setFont(QFont("Arvo",13, QFont.Light))
+        self.setCentralWidget(self.OpenLabel)
+
 
     def configurate_menubar(self):
         self.configurate_file_menu()
+        self.configurate_view_menu()
+        self.configurate_run_menu()
+        self.configurate_help_menu()
 
     def configurate_file_menu(self):
 
@@ -53,6 +67,13 @@ class MainWindow(QtGui.QMainWindow):
         save_output_file.setStatusTip(LMConfig.SAVE_OUTPUT_FILE_STATUS)
         save_output_file.triggered.connect(self.save_output_to_file)
 
+        # CLOSE SOURCE FILE
+        close_source_file = QtGui.QAction(QtGui.QIcon(LMConfig.CLOSE_SOURCE_FILE_ICON), 
+                                                     LMConfig.CLOSE_SOURCE_FILE_NAME, self)
+        close_source_file.setShortcut(LMConfig.CLOSE_SOURCE_FILE_SHORTCUT)
+        close_source_file.setStatusTip(LMConfig.CLOSE_SOURCE_FILE_STATUS)
+        close_source_file.triggered.connect(self.close_a_source_file)
+
         # EXIT
         exit = QtGui.QAction(QtGui.QIcon(LMConfig.EXIT_APPLICATION_ICON),
                                          LMConfig.EXIT_APPLICATION_NAME, self)
@@ -61,17 +82,20 @@ class MainWindow(QtGui.QMainWindow):
         self.connect(exit, QtCore.SIGNAL('triggered()'), QtCore.SLOT('close()'))
 
         menubar = self.menuBar()
-        file = menubar.addMenu('&File')
-        file.addAction(open_source_file)
-        file.addAction(open_style_file)
-        file.addSeparator()
-        file.addAction(save_output_info)
-        file.addAction(save_output_file)
-        file.addSeparator()
-        file.addAction(exit)  
+        menubar_file = menubar.addMenu('&File')
+        menubar_file.addAction(open_source_file)
+        menubar_file.addAction(open_style_file)
+        menubar_file.addSeparator()
+        menubar_file.addAction(save_output_info)
+        menubar_file.addAction(save_output_file)
+        menubar_file.addSeparator()
+        menubar_file.addAction(close_source_file)
+        menubar_file.addAction(exit)  
 
     def open_a_source_file(self):
         self.source_filename = QtGui.QFileDialog.getOpenFileName(self, 'Open Source File', '', 'Source Code(*.c)')
+        self.setWindowTitle( self.source_filename + ' - ' + LMConfig.APPLICATION_NAME)
+        self.OpenLabel.setVisible(False)
 
     def open_a_style_file(self):
         self.style_filename = QtGui.QFileDialog.getOpenFileName(self, 'Open Style File', '', 'Source Code(*.style)')
@@ -82,7 +106,28 @@ class MainWindow(QtGui.QMainWindow):
     def save_output_to_file(self):
         print 'save output'
 
+    def close_a_source_file(self):
+        print 'close'
+
+    def configurate_view_menu(self):
+        menubar = self.menuBar()
+        menubar_view = menubar.addMenu('&View')
+
+    def configurate_run_menu(self):
+        menubar = self.menuBar()
+        menubar_run = menubar.addMenu('&Run')
+
+    def configurate_help_menu(self):
+        menubar = self.menuBar()
+        menubar_help = menubar.addMenu('&Help')
+
+
 app = QtGui.QApplication(sys.argv)
+
+splash = QSplashScreen(QPixmap(LMConfig.APPLICATION_LAUNCH_IMAGE))  
+splash.show()  
+app.processEvents()  
 main = MainWindow()
 main.show()
+splash.finish(main)  
 sys.exit(app.exec_())

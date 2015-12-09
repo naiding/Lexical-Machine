@@ -1,6 +1,7 @@
 
 APPLICATION_NAME = '''Lexical Machine'''
 APPLICATION_ICON = '''icons/LexicalMachineIcon.png'''
+APPLICATION_LAUNCH_IMAGE = '''icons/LaunchImage.jpg'''
 
 OPEN_SOURCE_FILE_ICON = ''
 OPEN_SOURCE_FILE_NAME = 'Open C source file...'
@@ -21,6 +22,11 @@ SAVE_OUTPUT_FILE_ICON = ''
 SAVE_OUTPUT_FILE_NAME = 'Save output file'
 SAVE_OUTPUT_FILE_SHORTCUT = ''
 SAVE_OUTPUT_FILE_STATUS = ''
+
+CLOSE_SOURCE_FILE_ICON = ''
+CLOSE_SOURCE_FILE_NAME = 'Close C source file...'
+CLOSE_SOURCE_FILE_SHORTCUT = 'Ctrl+W'
+CLOSE_SOURCE_FILE_STATUS = 'Close a C source file'
 
 EXIT_APPLICATION_ICON = ''
 EXIT_APPLICATION_NAME = 'Exit'
