@@ -4,10 +4,11 @@
 import sys
 from PyQt4.QtGui import *  
 from PyQt4.QtCore import *  
-  
-
 from PyQt4 import QtGui, QtCore
+
 import LMConfig
+import LMFileHelper
+
 QTextCodec.setCodecForTr(QTextCodec.codecForName("utf8"))  
 
 class MainWindow(QtGui.QMainWindow):
@@ -46,12 +47,12 @@ class MainWindow(QtGui.QMainWindow):
         self.mainSplitter = QSplitter(Qt.Horizontal,self)  
         leftText = QTextBrowser(self.mainSplitter)  
         leftText.setAlignment(Qt.AlignCenter)  
-        rightSplitter = QSplitter(Qt.Vertical,self.mainSplitter)  
-        rightSplitter.setOpaqueResize(False)  
-        upText = QTextBrowser(rightSplitter)  
-        upText.setAlignment(Qt.AlignCenter)  
-        bottomText = QTextBrowser(rightSplitter)  
-        bottomText.setAlignment(Qt.AlignCenter)  
+        self.rightSplitter = QSplitter(Qt.Vertical, self.mainSplitter)  
+        self.rightSplitter.setOpaqueResize(False)  
+        self.upText = QTextBrowser(self.rightSplitter)  
+        self.upText.setAlignment(Qt.AlignCenter)  
+        self.bottomText = QTextBrowser(self.rightSplitter)  
+        self.bottomText.setAlignment(Qt.AlignCenter)  
         self.mainSplitter.setStretchFactor(1,1)  
         self.mainSplitter.setWindowTitle(self.tr("分割窗口")) 
         self.setCentralWidget(self.mainSplitter) 
@@ -115,6 +116,13 @@ class MainWindow(QtGui.QMainWindow):
         self.source_filename = QtGui.QFileDialog.getOpenFileName(self, 'Open Source File', '', 'Source Code(*.c)')
         self.setWindowTitle( self.source_filename + ' - ' + LMConfig.APPLICATION_NAME)
         self.set_working_space()
+
+        file_object = open(self.source_filename)
+        try:
+            all_the_text = file_object.read( )
+            self.upText.setText(all_the_text)
+        finally:
+            file_object.close( )
 
     def open_a_style_file(self):
         self.style_filename = QtGui.QFileDialog.getOpenFileName(self, 'Open Style File', '', 'Source Code(*.style)')
