@@ -8,13 +8,14 @@ from PyQt4.QtCore import *
 
 from PyQt4 import QtGui, QtCore
 import LMConfig
+QTextCodec.setCodecForTr(QTextCodec.codecForName("utf8"))  
 
 class MainWindow(QtGui.QMainWindow):
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
 
         # Window Configuration
-        self.resize(640, 320)
+        self.resize(800, 600)
         font = QFont(self.tr("Arial"),10)  
         QApplication.setFont(font)  
         self.setWindowTitle(LMConfig.APPLICATION_NAME)
@@ -25,17 +26,35 @@ class MainWindow(QtGui.QMainWindow):
         # MenuBar Configuration
         self.configurate_menubar()
 
-        self.OpenLabel = QtGui.QLabel( "Open a C Source File To Begin :)" )
-        self.OpenLabel.setAlignment( QtCore.Qt.AlignCenter )
-        self.OpenLabel.setFont(QFont("Arvo",13, QFont.Light))
-        self.setCentralWidget(self.OpenLabel)
-
+        self.set_opening_space()
 
     def configurate_menubar(self):
         self.configurate_file_menu()
         self.configurate_view_menu()
         self.configurate_run_menu()
         self.configurate_help_menu()
+
+    def set_opening_space(self):
+        # Launch Window Configuration
+        self.OpenLabel = QtGui.QLabel( "Open a C Source File To Begin :)" )
+        self.OpenLabel.setAlignment( QtCore.Qt.AlignCenter )
+        self.OpenLabel.setFont(QFont("Arvo",13, QFont.Light))
+        self.setCentralWidget(self.OpenLabel) 
+
+    def set_working_space(self):
+        # MainWindow Configuration
+        self.mainSplitter = QSplitter(Qt.Horizontal,self)  
+        leftText = QTextBrowser(self.mainSplitter)  
+        leftText.setAlignment(Qt.AlignCenter)  
+        rightSplitter = QSplitter(Qt.Vertical,self.mainSplitter)  
+        rightSplitter.setOpaqueResize(False)  
+        upText = QTextBrowser(rightSplitter)  
+        upText.setAlignment(Qt.AlignCenter)  
+        bottomText = QTextBrowser(rightSplitter)  
+        bottomText.setAlignment(Qt.AlignCenter)  
+        self.mainSplitter.setStretchFactor(1,1)  
+        self.mainSplitter.setWindowTitle(self.tr("分割窗口")) 
+        self.setCentralWidget(self.mainSplitter) 
 
     def configurate_file_menu(self):
 
@@ -95,7 +114,7 @@ class MainWindow(QtGui.QMainWindow):
     def open_a_source_file(self):
         self.source_filename = QtGui.QFileDialog.getOpenFileName(self, 'Open Source File', '', 'Source Code(*.c)')
         self.setWindowTitle( self.source_filename + ' - ' + LMConfig.APPLICATION_NAME)
-        self.OpenLabel.setVisible(False)
+        self.set_working_space()
 
     def open_a_style_file(self):
         self.style_filename = QtGui.QFileDialog.getOpenFileName(self, 'Open Style File', '', 'Source Code(*.style)')
@@ -107,6 +126,7 @@ class MainWindow(QtGui.QMainWindow):
         print 'save output'
 
     def close_a_source_file(self):
+        self.set_opening_space()
         print 'close'
 
     def configurate_view_menu(self):
