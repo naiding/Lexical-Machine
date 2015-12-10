@@ -11,7 +11,8 @@ int main(void)
     printf("This program calculates factorials.\n");
     printf("Enter a value in the range 0-12 (q to quit):\n");
 
-    while (scanf("%d", &num) == 1) {
+    while (scanf("%d", &num) == 1)
+    {
         if (num < 0)
         {
             printf("No negative numbers, please.\n");

@@ -1,0 +1,1 @@
+{"function": {"left_parenthesis_newline": false, "left_parenthesis_blank": false}, "special_character_blank": [",", ";"], "tabstop": 4, "delete_empty_statement": true, "parenthesis": {"left_parenthesis_right_blank": false, "right_parenthesis_left_blank": false}, "brace": {"brace_for_block": true, "left_brace_new_line": true}, "one_statement_per_line": true}

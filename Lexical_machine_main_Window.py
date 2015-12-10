@@ -8,6 +8,7 @@ from PyQt4 import QtGui, QtCore
 
 import LMConfig
 import LMFileHelper
+from Lexical_machine import LexicalMachine
 
 QTextCodec.setCodecForTr(QTextCodec.codecForName("utf8"))  
 
@@ -45,8 +46,8 @@ class MainWindow(QtGui.QMainWindow):
     def set_working_space(self):
         # MainWindow Configuration
         self.mainSplitter = QSplitter(Qt.Horizontal,self)  
-        leftText = QTextBrowser(self.mainSplitter)  
-        leftText.setAlignment(Qt.AlignCenter)  
+        self.leftText = QTextBrowser(self.mainSplitter)  
+        self.leftText.setAlignment(Qt.AlignCenter)  
         self.rightSplitter = QSplitter(Qt.Vertical, self.mainSplitter)  
         self.rightSplitter.setOpaqueResize(False)  
         self.upText = QTextBrowser(self.rightSplitter)  
@@ -142,12 +143,48 @@ class MainWindow(QtGui.QMainWindow):
         menubar_view = menubar.addMenu('&View')
 
     def configurate_run_menu(self):
+
+        # Run
+        # CLOSE SOURCE FILE
+        run_lexical_machine = QtGui.QAction(QtGui.QIcon(LMConfig.RUN_LEXICAL_MACHINCE_ICON), 
+                                                     LMConfig.RUN_LEXICAL_MACHINCE_NAME, self)
+        run_lexical_machine.setShortcut(LMConfig.RUN_LEXICAL_MACHINCE_SHORTCUT)
+        run_lexical_machine.setStatusTip(LMConfig.RUN_LEXICAL_MACHINCE_STATUS)
+        run_lexical_machine.triggered.connect(self.run)
+
         menubar = self.menuBar()
         menubar_run = menubar.addMenu('&Run')
+        menubar_run.addAction(run_lexical_machine)
 
     def configurate_help_menu(self):
         menubar = self.menuBar()
         menubar_help = menubar.addMenu('&Help')
+
+    def run(self):
+        print 'run'
+        if self.source_filename == None or self.source_filename == '':
+             QtGui.QMessageBox.information(self, "Empty Source File", "The source file can't be empty")
+        else:
+            try:
+                lexical = LexicalMachine(self.source_filename, self.style_filename)
+                lexical.run()
+            except Exception as e:
+                QtGui.QMessageBox.information(self, "Failed!","Sorry, there is something wrong with the program." +
+                                              "You can find information in the text browser")
+                self.leftText.setText(e.message)
+            else:
+                QtGui.QMessageBox.information(self, "Success!",
+                                              "The program runs successfully!\n" +
+                                              "You can find the output file in {}\n".format(lexical.output_filename) +
+                                              "and the info file in {}".format(lexical.output_info))
+                self.leftText.setText(lexical.info)
+                file_object = open(lexical.output_filename)
+                try:
+                    all_the_text = file_object.read( )
+                    self.bottomText.setText(all_the_text)
+                finally:
+                    file_object.close( )
+
 
 
 app = QtGui.QApplication(sys.argv)
