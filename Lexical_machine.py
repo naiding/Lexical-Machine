@@ -35,9 +35,9 @@ class LexicalMachine:
         reg = re.compile(r'\s*\n')
         for line in file:
             if reg.match(line):
-                self.text.append('<empty>')
+                self.text.append('<empty>') 
             else:
-                self.text.append(line.strip())
+                self.text.append(line.strip()) # delete whitespace
 
     # check style file input, if there is not any coresponding parameter,
     # the program will use a default value
