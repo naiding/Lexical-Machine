@@ -42,3 +42,8 @@ CONFIG_STYLE_ICON = ''
 CONFIG_STYLE_NAME = 'Config style...'
 CONFIG_STYLE_SHORTCUT = ''
 CONFIG_STYLE_STATUS = 'Configurate Style'
+
+ABOUT_ICON = ''
+ABOUT_NAME = 'About'
+ABOUT_SHORTCUT = ''
+ABOUT_STATUS = 'About us'

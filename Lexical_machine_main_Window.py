@@ -23,7 +23,8 @@ class MainWindow(QtGui.QMainWindow):
         self.style_filename = None
 
         # Window Configuration
-        self.resize(800, 600)
+        screen = QtGui.QDesktopWidget().screenGeometry()
+        self.resize(screen.width(), screen.height())
         font = QFont(self.tr("Arial"),10)  
         QApplication.setFont(font)
         self.setWindowTitle(LMConfig.APPLICATION_NAME)
@@ -51,10 +52,10 @@ class MainWindow(QtGui.QMainWindow):
 
     def set_working_space(self):
         # MainWindow Configuration
-        self.mainSplitter = QSplitter(Qt.Horizontal,self)  
+        self.mainSplitter = QSplitter(Qt.Horizontal,self)
         self.leftText = QTextBrowser(self.mainSplitter)  
         self.leftText.setAlignment(Qt.AlignCenter)  
-        self.rightSplitter = QSplitter(Qt.Vertical, self.mainSplitter)  
+        self.rightSplitter = QSplitter(Qt.Horizontal, self.mainSplitter)
         self.rightSplitter.setOpaqueResize(False)  
         self.upText = QTextBrowser(self.rightSplitter)  
         self.upText.setAlignment(Qt.AlignCenter)  
@@ -62,7 +63,10 @@ class MainWindow(QtGui.QMainWindow):
         self.bottomText.setAlignment(Qt.AlignCenter)  
         self.mainSplitter.setStretchFactor(1,1)  
         self.mainSplitter.setWindowTitle(self.tr("分割窗口")) 
-        self.setCentralWidget(self.mainSplitter) 
+        self.setCentralWidget(self.mainSplitter)
+        self.leftText.setFont(QFont("Consolas",12, QFont.Light))
+        self.upText.setFont(QFont("Consolas",10, QFont.Light))
+        self.bottomText.setFont(QFont("Consolas",10, QFont.Light))
 
     def configurate_file_menu(self):
 
@@ -79,20 +83,6 @@ class MainWindow(QtGui.QMainWindow):
         open_style_file.setShortcut(LMConfig.OPEN_STYLE_FILE_SHORTCUT)
         open_style_file.setStatusTip(LMConfig.OPEN_STYLE_FILE_STATUS)
         open_style_file.triggered.connect(self.open_a_style_file)
-
-        # SAVE OUTPUT INFO
-        save_output_info = QtGui.QAction(QtGui.QIcon(LMConfig.SAVE_OUTPUT_INFO_ICON), 
-                                                     LMConfig.SAVE_OUTPUT_INFO_NAME, self)
-        save_output_info.setShortcut(LMConfig.SAVE_OUTPUT_INFO_SHORTCUT)
-        save_output_info.setStatusTip(LMConfig.SAVE_OUTPUT_INFO_STATUS)
-        save_output_info.triggered.connect(self.save_info_to_file)
-
-        # SAVE OUTPUT FILE
-        save_output_file = QtGui.QAction(QtGui.QIcon(LMConfig.SAVE_OUTPUT_FILE_ICON), 
-                                                     LMConfig.SAVE_OUTPUT_FILE_NAME, self)
-        save_output_file.setShortcut(LMConfig.SAVE_OUTPUT_FILE_SHORTCUT)
-        save_output_file.setStatusTip(LMConfig.SAVE_OUTPUT_FILE_STATUS)
-        save_output_file.triggered.connect(self.save_output_to_file)
 
         # CLOSE SOURCE FILE
         close_source_file = QtGui.QAction(QtGui.QIcon(LMConfig.CLOSE_SOURCE_FILE_ICON), 
@@ -113,8 +103,6 @@ class MainWindow(QtGui.QMainWindow):
         menubar_file.addAction(open_source_file)
         menubar_file.addAction(open_style_file)
         menubar_file.addSeparator()
-        menubar_file.addAction(save_output_info)
-        menubar_file.addAction(save_output_file)
         menubar_file.addSeparator()
         menubar_file.addAction(close_source_file)
         menubar_file.addAction(exit)  
@@ -128,20 +116,46 @@ class MainWindow(QtGui.QMainWindow):
         file_object = open(self.source_filename)
         try:
             all_the_text = file_object.read( )
-            self.upText.setText(all_the_text)
+            all_the_text = self.string2html(all_the_text)
+
+            self.upText.setHtml("""
+                <body>
+                %s
+                </body>
+            """ % all_the_text)
+
         finally:
             file_object.close( )
+
+    def string2html(self, all_the_text):
+        all_the_text = all_the_text.replace("<", "&lt;")
+        all_the_text = all_the_text.replace(">", "&gt;")
+        all_the_text = all_the_text.replace("\n","<br>")
+        all_the_text = all_the_text.replace(" ","&nbsp;")
+
+        all_the_text = all_the_text.replace("include", """<font color=#800080>include</font>""")
+        all_the_text = all_the_text.replace("int","""<font color=#000080>int</font>""")
+        all_the_text = all_the_text.replace("long","""<font color=#000080>long</font>""")
+        all_the_text = all_the_text.replace("double","""<font color=#000080>double</font>""")
+        all_the_text = all_the_text.replace("float","""<font color=#000080>float</font>""")
+        all_the_text = all_the_text.replace("char","""<font color=#000080>char</font>""")
+        all_the_text = all_the_text.replace("short","""<font color=#000080>short</font>""")
+        all_the_text = all_the_text.replace("if","""<font color=#6A5ACD>if</font>""")
+        all_the_text = all_the_text.replace("else","""<font color=#6A5ACD>else</font>""")
+
+        all_the_text = all_the_text.replace("for","""<font color=#800000>printf</font>""")
+        all_the_text = all_the_text.replace("return","""<font color=#FF1493>return</font>""")
+        all_the_text = all_the_text.replace("void","""<font color=#FF1493>void</font>""")
+        all_the_text = all_the_text.replace("//","""<font color=#2E8B57>//</font>""")
+        all_the_text = all_the_text.replace("{","""<font color=#Dc143c>{</font>""")
+        all_the_text = all_the_text.replace("}","""<font color=#Dc143c>}</font>""")
+        return all_the_text
 
     def open_a_style_file(self):
         self.style_filename = QtGui.QFileDialog.getOpenFileName(self, 'Open Style File', '', 'Source Code(*.style)')
         self.machine = LexicalMachine(self.source_filename, self.style_filename)
         self.config_style_dict = self.machine.style
 
-    def save_info_to_file(self):
-        print 'save info'
-
-    def save_output_to_file(self):
-        print 'save output'
 
     def close_a_source_file(self):
         self.set_opening_space()
@@ -173,13 +187,27 @@ class MainWindow(QtGui.QMainWindow):
         menubar_run.addAction(config_style)
 
     def configurate_help_menu(self):
-        menubar = self.menuBar()
-        menubar_help = menubar.addMenu('&Help')
+
+        about = QtGui.QAction(QtGui.QIcon(LMConfig.ABOUT_ICON),
+                                                     LMConfig.ABOUT_NAME, self)
+        about.setShortcut(LMConfig.ABOUT_SHORTCUT)
+        about.setStatusTip(LMConfig.ABOUT_STATUS)
+        about.triggered.connect(self.about)
+
+        menubar_help = self.menuBar()
+        menubar_help = menubar_help.addMenu('&Help')
+        menubar_help.addAction(about)
 
     def config_style(self):
-        print self.config_style_dict
         self.select_style_dialog = selectStyleWidget(self, self.config_style_dict)
         self.select_style_dialog.show()
+
+    def about(self):
+        self.about_us = QMessageBox()
+        self.about_us.setWindowTitle('About us')
+        self.about_us.resize(320, 240)
+        self.about_us.setText("""Naiding Zhou:U201313768\nXuanyu Zheng:U201313768\nChenchen Xu:U201313768\n""")
+        self.about_us.show()
 
     def run(self):
         print 'run'
@@ -204,7 +232,13 @@ class MainWindow(QtGui.QMainWindow):
                 file_object = open(self.machine.output_filename)
                 try:
                     all_the_text = file_object.read( )
-                    self.bottomText.setText(all_the_text)
+                    all_the_text = self.string2html(all_the_text)
+
+                    self.bottomText.setHtml("""
+                        <body>
+                        %s
+                        </body>
+                    """ % all_the_text)
                 finally:
                     file_object.close( )
 
@@ -337,7 +371,6 @@ class selectStyleWidget(QDialog):
         self.configDict['tabstop'] = self.TabStopEdit.value()
         self.configDict['special_character_blank'] = unicode(self.SpecialCharacterEdit.text().toUtf8(), 'utf-8', 'ignore').split('.')
         self.mainWindow.config_style_dict = self.configDict
-        print self.configDict
         self.close()
 
     def showDetail(self):

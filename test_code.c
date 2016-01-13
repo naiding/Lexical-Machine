@@ -1,10 +1,3 @@
-// 1 /* hh *
-/* 2 // */
-// 3
-   /* 4
-   5
-   // 6
-   */
 
 #include <stdio.h>
 #include <cmath.h>
@@ -44,26 +37,26 @@ long fact
 (int n)
 {
     long ans;
-    for (ans = 1;n > 1;n--){
-        ans *= n;
-    }
-    ;//这里就是一个空语句
+    // for (ans = 1;n > 1;n--){
+    //     ans *= n;
+    // }
+    ;
     float a = 1, b = 2, c = 3;
     a = 2; c = 4;; b = 2;
-    ;a = 4; b = a;;;c = a + b;;
+    a = 4; b = a;;;c = a + b;;
     return ans;
 }
 
 long rfact	(int n)
 {
-    ;//这里就是一个空语句
     long ans;
     if (n > 0) ans= n * rfact(n-1);
     else ans = 1;
 
     if (n > 0) {
         ans= n * rfact(n-1);
-    } else {
+    }
+    else {
         ans = 1;
     }
     return ans;

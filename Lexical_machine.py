@@ -338,7 +338,9 @@ class LexicalMachine:
     class GlobalCharacterAnalysis:
 
         def __init__(self, text, tabstop):
-            self.text = text
+
+            # self.text = text
+
             self.tabstop = tabstop
             self.reg_if = re.compile(r'\s*if\s*\([\s\S]*')
             self.reg_elseif = re.compile(r'\s*else\s+if\s*\([\s\S]*')
@@ -349,6 +351,8 @@ class LexicalMachine:
             self.right_brace = {}
             self.left_brace_accumulate = 0
 
+            self.text = self.reshape_text(text)
+
             # Delete vacuum lines
             self.vacuum_lines = []
 
@@ -357,6 +361,27 @@ class LexicalMachine:
             self.calling_relationship = {}
             self.called_relationship = {}
             self.exclude_words = ['for','while','if','else','printf','scanf',]
+
+        def reshape_text(self, text):
+            index = 0
+            while index < len(text):
+                if self.reg_if.match(text[index]) or \
+                   self.reg_for.match(text[index])or \
+                   self.reg_elseif.match(text[index]):
+                    if 'else' not in text[index] and \
+                       text[index].find(')')+1 < len(text[index]):
+                        temp = text[index][text[index].find(')')+2:]
+                        text[index] = text[index][0:text[index].find(')')+1]
+                        text.insert(index+1,temp)
+                        index = index + 1
+                if self.reg_else.match(text[index]) and 'if' not in text[index]:
+                    if text[index].find('else')+4 < len(text[index]):
+                        temp = text[index][text[index].find('else')+5:]
+                        text[index] = text[index][0:text[index].find('else')+4]
+                        text.insert(index+1,temp)
+                        index = index + 1
+                index = index + 1
+            return text
 
         # Using recursive to detect special keywords eg. if/else/for/while
         # the recursive to do as below:
@@ -386,6 +411,7 @@ class LexicalMachine:
             else:
                 return index+1
 
+        # 4.1.1.5
         # 4.1.1.5
         # detect the if/else/while/for brace for the whole text
         def add_brace(self):
@@ -640,7 +666,6 @@ class LexicalMachine:
             #     print key, ':',  value
 
     def run(self):
-        print self.style
         self.run_by_rule()
         self.output_to_file()
 
