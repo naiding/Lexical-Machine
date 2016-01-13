@@ -5,7 +5,7 @@ import sys
 from PyQt4.QtGui import *  
 from PyQt4.QtCore import *  
 from PyQt4 import QtGui, QtCore
-
+import Lexical_machine_select_style_dialog
 import LMConfig
 import LMFileHelper
 from Lexical_machine import LexicalMachine
@@ -174,7 +174,8 @@ class MainWindow(QtGui.QMainWindow):
         menubar_help = menubar.addMenu('&Help')
 
     def config_style(self):
-        print 'config style'
+        self.select_style_dialog = Lexical_machine_select_style_dialog.selectStyleWidget()
+        self.select_style_dialog.show()
 
     def run(self):
         print 'run'
