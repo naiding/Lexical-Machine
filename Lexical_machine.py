@@ -223,7 +223,10 @@ class LexicalMachine:
 
     # 4.1.1.1 the First Condition
     @staticmethod
+    # This method deletes the blank before the left parenthesis
+    # Trick: Four matches, ignore the blank
     def function_left_parenthesis_blank(line):
+        # 单词字符 若干空白字符 一次
         reg = re.compile(r'(\w+)[\s\*]+(\w+|\w+::\w+)\s*(\([\w\s,\*]*?\))([\s\S]*)')
         reg_match = reg.match(line)
         if reg_match:
@@ -249,10 +252,17 @@ class LexicalMachine:
     # the first kind, there is blank, but still in the same line
     @staticmethod
     def parenthesis_blank(line):
-        # li = re.findall(r'\w+\s+\(', line)
-        # for word in li:
-        #     line = line.replace(word, ''.join(filter(lambda x: x!= ' ', word.split(' '))))
         line = re.sub(r'\(\s+', '(', line)
+        line = re.sub(r'\s+\)', ')', line)
+        return line
+
+    @staticmethod
+    def left_right_parenthesis_blank(line):
+        line = re.sub(r'\(\s+', '(', line)
+        return line
+
+    @staticmethod
+    def right_left_parenthesis_blank(line):
         line = re.sub(r'\s+\)', ')', line)
         return line
 
@@ -521,16 +531,34 @@ class LexicalMachine:
             # 4.1.1.1 first condition
             if self.style['function']['left_parenthesis_blank'] == False:
                 line = LexicalMachine.function_left_parenthesis_blank(line)
-            # 4.1.1.1 second condtion
+            # 4.1.1.1 second condition
             if self.style['function']['left_parenthesis_newline'] == False and \
                 i+1 < len(self.text):
                 line, self.text[i+1] = LexicalMachine.function_left_parenthesis_newline(line, self.text[i+1])
+
             # 4.1.1.2
+            # if self.style['parenthesis']['left_parenthesis_right_blank'] == False and \
+            #    self.style['parenthesis']['right_parenthesis_left_blank'] == False:
+            #     line = LexicalMachine.parenthesis_blank(line)
+            #     if i+1 < len(self.text):
+            #         line, self.text[i+1] = LexicalMachine.parenthesis_new_line(line, self.text[i+1])
+
+            # 4.1.1.2
+            if self.style['parenthesis']['left_parenthesis_right_blank'] == False:
+                line = LexicalMachine.left_right_parenthesis_blank(line)
+                # if i+1 < len(self.text):
+                    # line, self.text[i+1] = LexicalMachine.parenthesis_new_line(line, self.text[i+1])
+
+            if self.style['parenthesis']['right_parenthesis_left_blank'] == False:
+                line = LexicalMachine.right_left_parenthesis_blank(line)
+                # if i+1 < len(self.text):
+                #     line, self.text[i+1] = LexicalMachine.parenthesis_new_line(line, self.text[i+1])
+
             if self.style['parenthesis']['left_parenthesis_right_blank'] == False and \
                self.style['parenthesis']['right_parenthesis_left_blank'] == False:
-                line = LexicalMachine.parenthesis_blank(line)
                 if i+1 < len(self.text):
                     line, self.text[i+1] = LexicalMachine.parenthesis_new_line(line, self.text[i+1])
+
             # 4.1.1.4
             line = self.special_character_blank(line)
             self.text[i] = line
@@ -608,6 +636,9 @@ class LexicalMachine:
 
         self.run_by_rule()
         self.output_to_file()
+
+        # for index,item in enumerate(self.text):
+        #     print item
 
 if __name__ == '__main__':
     if len(sys.argv) == 4 and sys.argv[1] == '-style':
