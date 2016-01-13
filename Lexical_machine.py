@@ -17,12 +17,6 @@ class SystaxError(Exception):
 
 class LexicalMachine:
 
-    text = [] # A list to store every line of source code
-    lines = 0
-    style = {}
-    global_machine = None
-    info = ''
-
     def __init__(self, source_filename, style_filename):
 
         self.source_filename = source_filename
@@ -31,8 +25,20 @@ class LexicalMachine:
         self.source_file = None
         self.style_file = None
 
-        self.output_filename = self.source_filename[:-2] + '_output.c'
-        self.output_info = self.source_filename[:-2] + '_info.txt'
+        if self.source_filename:
+            self.output_filename = self.source_filename[:-2] + '_output.c'
+            self.output_info = self.source_filename[:-2] + '_info.txt'
+        else:
+            self.output_filename = ''
+            self.output_info = ''
+
+        self.text = [] # A list to store every line of source code
+        self.lines = 0
+        self.style = {}
+        self.global_machine = None
+        self.info = ''
+
+        self.load_file()
 
     # Read the source code from the file
     # Using <empty> to replace \n so that it won't be strip when handling
@@ -231,8 +237,6 @@ class LexicalMachine:
         reg_match = reg.match(line)
         if reg_match:
             groups = reg_match.groups()
-            print groups
-            print groups[0]+' '+''.join(groups[1:])
             return groups[0]+' '+''.join(groups[1:])
         else:
             return line
@@ -599,7 +603,7 @@ class LexicalMachine:
             self.info += s
             f.write(s)
 
-    def run(self):
+    def load_file(self):
 
         self.lines = 0
         self.info = ''
@@ -635,12 +639,10 @@ class LexicalMachine:
             # for key, value in self.style.items():
             #     print key, ':',  value
 
-
+    def run(self):
+        print self.style
         self.run_by_rule()
         self.output_to_file()
-
-        # for index,item in enumerate(self.text):
-        #     print item
 
 if __name__ == '__main__':
     if len(sys.argv) == 4 and sys.argv[1] == '-style':
