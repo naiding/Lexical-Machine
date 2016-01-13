@@ -13,8 +13,14 @@ from Lexical_machine import LexicalMachine
 QTextCodec.setCodecForTr(QTextCodec.codecForName("utf8"))  
 
 class MainWindow(QtGui.QMainWindow):
+
+
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
+
+        self.machine = None
+        self.source_filename = None
+        self.style_filename = None
 
         # Window Configuration
         self.resize(800, 600)
@@ -23,7 +29,7 @@ class MainWindow(QtGui.QMainWindow):
         self.setWindowTitle(LMConfig.APPLICATION_NAME)
         self.setWindowIcon(QtGui.QIcon(LMConfig.APPLICATION_ICON))
         self.statusBar().showMessage('Ready')
-        QThread.sleep(1)  
+        # QThread.sleep(1)
 
         # MenuBar Configuration
         self.configurate_menubar()
@@ -152,13 +158,23 @@ class MainWindow(QtGui.QMainWindow):
         run_lexical_machine.setStatusTip(LMConfig.RUN_LEXICAL_MACHINCE_STATUS)
         run_lexical_machine.triggered.connect(self.run)
 
+        config_style = QtGui.QAction(QtGui.QIcon(LMConfig.CONFIG_STYLE_ICON),
+                                                     LMConfig.CONFIG_STYLE_NAME, self)
+        config_style.setShortcut(LMConfig.CONFIG_STYLE_SHORTCUT)
+        config_style.setStatusTip(LMConfig.CONFIG_STYLE_STATUS)
+        config_style.triggered.connect(self.config_style)
+
         menubar = self.menuBar()
         menubar_run = menubar.addMenu('&Run')
         menubar_run.addAction(run_lexical_machine)
+        menubar_run.addAction(config_style)
 
     def configurate_help_menu(self):
         menubar = self.menuBar()
         menubar_help = menubar.addMenu('&Help')
+
+    def config_style(self):
+        print 'config style'
 
     def run(self):
         print 'run'
@@ -166,8 +182,8 @@ class MainWindow(QtGui.QMainWindow):
              QtGui.QMessageBox.information(self, "Empty Source File", "The source file can't be empty")
         else:
             try:
-                lexical = LexicalMachine(self.source_filename, self.style_filename)
-                lexical.run()
+                self.machine = LexicalMachine(self.source_filename, self.style_filename)
+                self.machine.run()
             except Exception as e:
                 QtGui.QMessageBox.information(self, "Failed!","Sorry, there is something wrong with the program." +
                                               "You can find information in the text browser")
@@ -175,10 +191,10 @@ class MainWindow(QtGui.QMainWindow):
             else:
                 QtGui.QMessageBox.information(self, "Success!",
                                               "The program runs successfully!\n" +
-                                              "You can find the output file in {}\n".format(lexical.output_filename) +
-                                              "and the info file in {}".format(lexical.output_info))
-                self.leftText.setText(lexical.info)
-                file_object = open(lexical.output_filename)
+                                              "You can find the output file in {}\n".format(self.machine.output_filename) +
+                                              "and the info file in {}".format(self.machine.output_info))
+                self.leftText.setText(self.machine.info)
+                file_object = open(self.machine.output_filename)
                 try:
                     all_the_text = file_object.read( )
                     self.bottomText.setText(all_the_text)
