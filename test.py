@@ -32,13 +32,14 @@ def file_diff(filename1, filename2):
 
 if __name__ == '__main__':
 
-    files_with_error_list = '/Users/zhounaiding/PycharmProjects/Python/Lexical-Machine/test/codeE2.c'
-    files_output = '/Users/zhounaiding/PycharmProjects/Python/Lexical-Machine/test/codeE2_output.c'
+    file_path = '/Users/zhounaiding/PycharmProjects/Python/Lexical-Machine/test/codeE2.c'
+    file_output_path = '/Users/zhounaiding/PycharmProjects/Python/Lexical-Machine/test/codeE2_output.c'
+    style_file_path = '/Users/zhounaiding/PycharmProjects/Python/Lexical-Machine-master/default.style'
     original_file = '/Users/zhounaiding/PycharmProjects/Python/Lexical-Machine/test/code.c'
 
-    lexical = LexicalMachine(files_with_error_list, None)
+    lexical = LexicalMachine(file_path, style_file_path)
     lexical.run()
-    file_diff(files_output, original_file)
+    # file_diff(files_output, original_file)
 
     # files_with_error_list = ['/Users/zhounaiding/PycharmProjects/Python/Lexical-Machine/test/codeE{}.c'.format(x) for x in range(1,9)]
     # files_output = ['/Users/zhounaiding/PycharmProjects/Python/Lexical-Machine/test/codeE{}_output.c'.format(x) for x in range(1,9)]

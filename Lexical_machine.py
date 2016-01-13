@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import json
 import re
 import sys
@@ -15,21 +17,24 @@ class SystaxError(Exception):
 
 class LexicalMachine:
 
-    text = []
+    text = [] # A list to store every line of source code
     lines = 0
     style = {}
     global_machine = None
     info = ''
 
     def __init__(self, source_filename, style_filename):
+
         self.source_filename = source_filename
         self.style_filename = style_filename
-        self.style_file = None
+
         self.source_file = None
+        self.style_file = None
+
         self.output_filename = self.source_filename[:-2] + '_output.c'
         self.output_info = self.source_filename[:-2] + '_info.txt'
 
-    # read the source code from the file
+    # Read the source code from the file
     # Using <empty> to replace \n so that it won't be strip when handling
     def read_source_code(self, file):
         reg = re.compile(r'\s*\n')
@@ -38,8 +43,15 @@ class LexicalMachine:
                 self.text.append('<empty>') 
             else:
                 self.text.append(line.strip()) # delete whitespace
+        # print self.text
 
-    # check style file input, if there is not any coresponding parameter,
+    # Read the style file
+    def read_style(self, file):
+        self.style = json.loads(''.join([line for line in file]))
+        # for key, value in self.style.items():
+        #     print key, ':',  value
+
+    # Check style file input, if there is not any coresponding parameter,
     # the program will use a default value
     # instead of using `get` as there is several levels for a dictionary
     def style_check(self):
@@ -101,10 +113,6 @@ class LexicalMachine:
         # 4.1.1.7 'one_statement_per_line', every statement occupies one line
         if not self.style.has_key('one_statement_per_line'):
             self.style['one_statement_per_line'] = True
-
-    # read the style file
-    def read_style(self, file):
-        self.style = json.loads(''.join([line for line in file]))
 
     # ignore the comment; Block comments in /* */ or line comments after //
     def comment_delete(self):
@@ -562,17 +570,26 @@ class LexicalMachine:
             f.write(s)
 
     def run(self):
+
         self.lines = 0
         self.info = ''
         self.text = []
         self.style = {}
+
+        # Open source file by source_filename
         try:
             self.source_file = open(self.source_filename)
         except IOError as e:
             print("I/O error({0}): {1}".format(e.errno, e.strerror))
             exit(0)
+
+        # Read source code and handle it, save to self.text
         self.read_source_code(self.source_file)
         self.source_file.close()
+
+        # Open style file by style_filename
+        # Read style file
+        # Check style file
         try:
             if self.style_filename:
                 self.style_file = open(self.style_filename)
@@ -585,6 +602,10 @@ class LexicalMachine:
                 self.style_file.close()
         finally:
             self.style_check()
+            for key, value in self.style.items():
+                print key, ':',  value
+
+
         self.run_by_rule()
         self.output_to_file()
 
