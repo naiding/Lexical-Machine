@@ -231,6 +231,8 @@ class LexicalMachine:
         reg_match = reg.match(line)
         if reg_match:
             groups = reg_match.groups()
+            print groups
+            print groups[0]+' '+''.join(groups[1:])
             return groups[0]+' '+''.join(groups[1:])
         else:
             return line
