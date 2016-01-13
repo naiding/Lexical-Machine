@@ -1,5 +1,5 @@
 {
-    "function": {"left_parenthesis_newline": false, "left_parenthesis_blank": false}, 
+    "function": {"left_parenthesis_newline": true, "left_parenthesis_blank": false},
     "parenthesis": {"left_parenthesis_right_blank": false, "right_parenthesis_left_blank": false}, 
     "tabstop": 4, 
     "special_character_blank": [",", ";"],

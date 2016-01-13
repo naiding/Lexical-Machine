@@ -32,10 +32,10 @@ def file_diff(filename1, filename2):
 
 if __name__ == '__main__':
 
-    file_path = '/Users/zhounaiding/PycharmProjects/Python/Lexical-Machine/test/codeE2.c'
-    file_output_path = '/Users/zhounaiding/PycharmProjects/Python/Lexical-Machine/test/codeE2_output.c'
+    file_path = '/Users/zhounaiding/Desktop/lexical/test/codeE1.c'
+    file_output_path = '/Users/zhounaiding/Desktop/lexical/test/codeE1_output.c'
     style_file_path = '/Users/zhounaiding/PycharmProjects/Python/Lexical-Machine-master/default.style'
-    original_file = '/Users/zhounaiding/PycharmProjects/Python/Lexical-Machine/test/code.c'
+    original_file = '/Users/zhounaiding/Desktop/lexical/test/code.c'
 
     lexical = LexicalMachine(file_path, style_file_path)
     lexical.run()

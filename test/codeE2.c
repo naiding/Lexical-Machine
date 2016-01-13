@@ -1,9 +1,9 @@
 #include <stdio.h>
-
+#include <cmath.h>
 long fact(int n);
 
 long rfact(int n);
-
+// hah
 int main(void	)
 {
     int num;

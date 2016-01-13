@@ -115,13 +115,13 @@ class LexicalMachine:
             self.style['one_statement_per_line'] = True
 
     # ignore the comment; Block comments in /* */ or line comments after //
+    # set all the comment line with ""
     def comment_delete(self):
 
         # Three regrex expressions, corresponding to three comment status
-        block_comment_start = re.compile(r'([\s\S]*)/\*[\s\S]*')
-        block_comment_end = re.compile(r'[\s\S]*\*/([\s\S]*)')
-        line_comment_start = re.compile(r'([\s\S]*)//[\s\S]*')
-
+        block_comment_start = re.compile(r'([\s\S]*)/\*[\s\S]*') # "/*"
+        block_comment_end = re.compile(r'[\s\S]*\*/([\s\S]*)') # "*/"
+        line_comment_start = re.compile(r'([\s\S]*)//[\s\S]*') # "//"
         class UnexpectedEndofComment(Exception):
             pass
 
@@ -218,7 +218,7 @@ class LexicalMachine:
                 self.text[num] = ''
 
             num += 1
-
+            # print self.text
         self.text = word_clean(self.text)
 
     # 4.1.1.1 the First Condition
@@ -509,9 +509,9 @@ class LexicalMachine:
 
     # According to the style, choose the required function
     def run_by_rule(self):
+
         # Delete Comment
         self.comment_delete()
-
         # Calculate Lines
         self.lines = len(list(filter(lambda x: x.find('<empty>') == -1,self.text)))
 
@@ -602,8 +602,8 @@ class LexicalMachine:
                 self.style_file.close()
         finally:
             self.style_check()
-            for key, value in self.style.items():
-                print key, ':',  value
+            # for key, value in self.style.items():
+            #     print key, ':',  value
 
 
         self.run_by_rule()
