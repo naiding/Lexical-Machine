@@ -1,6 +1,6 @@
 
 # -*- coding: utf-8 -*-   
-
+import re
 import sys
 import json
 from PyQt4.QtGui import *  
@@ -132,23 +132,29 @@ class MainWindow(QtGui.QMainWindow):
         all_the_text = all_the_text.replace(">", "&gt;")
         all_the_text = all_the_text.replace("\n","<br>")
         all_the_text = all_the_text.replace(" ","&nbsp;")
-
-        all_the_text = all_the_text.replace("include", """<font color=#800080>include</font>""")
-        all_the_text = all_the_text.replace("int","""<font color=#000080>int</font>""")
-        all_the_text = all_the_text.replace("long","""<font color=#000080>long</font>""")
-        all_the_text = all_the_text.replace("double","""<font color=#000080>double</font>""")
-        all_the_text = all_the_text.replace("float","""<font color=#000080>float</font>""")
-        all_the_text = all_the_text.replace("char","""<font color=#000080>char</font>""")
-        all_the_text = all_the_text.replace("short","""<font color=#000080>short</font>""")
-        all_the_text = all_the_text.replace("if","""<font color=#6A5ACD>if</font>""")
-        all_the_text = all_the_text.replace("else","""<font color=#6A5ACD>else</font>""")
-
-        all_the_text = all_the_text.replace("for","""<font color=#800000>printf</font>""")
-        all_the_text = all_the_text.replace("return","""<font color=#FF1493>return</font>""")
-        all_the_text = all_the_text.replace("void","""<font color=#FF1493>void</font>""")
         all_the_text = all_the_text.replace("//","""<font color=#2E8B57>//</font>""")
-        all_the_text = all_the_text.replace("{","""<font color=#Dc143c>{</font>""")
-        all_the_text = all_the_text.replace("}","""<font color=#Dc143c>}</font>""")
+        all_the_text = all_the_text.replace("{","""<font color=#DC143C>{</font>""")
+        all_the_text = all_the_text.replace("}","""<font color=#DC143C>}</font>""")
+
+        all_the_text = re.sub(r"(\binclude\b)","""<font color=#800080>include</font>""",all_the_text)
+        all_the_text = re.sub(r"(\bint\b)","""<font color=#000080>int</font>""",all_the_text)
+        all_the_text = re.sub(r"(\blong\b)","""<font color=#000080>long</font>""",all_the_text)
+        all_the_text = re.sub(r"(\bdouble\b)","""<font color=#000080>double</font>""",all_the_text)
+        all_the_text = re.sub(r"(\bfloat\b)","""<font color=#000080>float</font>""",all_the_text)
+        all_the_text = re.sub(r"(\bchar\b)","""<font color=#000080>char</font>""",all_the_text)
+        all_the_text = re.sub(r"(\bshort\b)","""<font color=#000080>short</font>""",all_the_text)
+        all_the_text = re.sub(r"(\bif\b)","""<font color=#6A5ACD>if</font>""",all_the_text)
+        all_the_text = re.sub(r"(\belse\b)","""<font color=#6A5ACD>else</font>""",all_the_text)
+        all_the_text = re.sub(r"(\bprintf\b)","""<font color=#663300>printf</font>""",all_the_text)
+        all_the_text = re.sub(r"(\bscanf\b)","""<font color=#663300>scanf</font>""",all_the_text)
+
+        all_the_text = re.sub(r"(\bfor\b)","""<font color=#800000>for</font>""",all_the_text)
+        all_the_text = re.sub(r"(\bwhile\b)","""<font color=#800000>while</font>""",all_the_text)
+        all_the_text = re.sub(r"(\bswitch\b)","""<font color=#800000>switch</font>""",all_the_text)
+
+        all_the_text = re.sub(r"(\breturn\b)","""<font color=#FF1493>return</font>""",all_the_text)
+        all_the_text = re.sub(r"(\bvoid\b)","""<font color=#FF1493>void</font>""",all_the_text)
+
         return all_the_text
 
     def open_a_style_file(self):
