@@ -39,10 +39,7 @@ long fact
 (int n)
 {
     long ans;
-    // for (ans = 1;n > 1;n--){
-    //     ans *= n;
-    // }
-    ;
+    for(int i = 1;i < 10;i++) a=b;
     float a = 1, b = 2, c = 3;
     a = 2; c = 4;; b = 2;
     a = 4; b = a;;;c = a + b;;

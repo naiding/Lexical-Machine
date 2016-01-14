@@ -306,24 +306,25 @@ class LexicalMachine:
     @staticmethod
     def multiple_code_split(line):
         if line.find("for") == -1:
-            split_line =  re.sub(r';', ";\n", line).split('\n')
+            split_line = re.sub(r';', ";\n", line).split('\n')
         else:
-            li = re.findall(r'for\s*\([\s\S]+?\)', line)
-            end = 0
-            split_line = []
-            # find the for loop first, then using the for loop to devide the line into pieces
-            # for every pieces, using colon-split to get multiple lines
-            index = line.index(li[0])
-            split_line = split_line + re.sub(r';', ';\n', line[0:index]).split('\n')
-            for loop in li:
-                index = line.index(loop)
-                if loop == li[-1]:
-                    end = len(line)
-                else:
-                    end = line.index(li[li.index(loop)+1])
-                part_split = re.sub(r';', ';\n', line[index + len(loop):end]).split('\n')
-                part_split[0] = loop + part_split[0]
-                split_line = split_line + part_split
+            return [line]
+            # li = re.findall(r'for\s*\([\s\S]+?\)', line)
+            # end = 0
+            # split_line = []
+            # # find the for loop first, then using the for loop to devide the line into pieces
+            # # for every pieces, using colon-split to get multiple lines
+            # index = line.index(li[0])
+            # split_line = split_line + re.sub(r';', ';\n', line[0:index]).split('\n')
+            # for loop in li:
+            #     index = line.index(loop)
+            #     if loop == li[-1]:
+            #         end = len(line)
+            #     else:
+            #         end = line.index(li[li.index(loop)+1])
+            #     part_split = re.sub(r';', ';\n', line[index + len(loop):end]).split('\n')
+            #     part_split[0] = loop + part_split[0]
+            #     split_line = split_line + part_split
         return word_clean(split_line)
 
     # 4.1.1.7
@@ -331,7 +332,8 @@ class LexicalMachine:
     def multiple_code_split_and_replace(self):
         index = 0
         while index < len(self.text):
-            index = list_replace(self.text, index, LexicalMachine.multiple_code_split(self.text[index]))
+            replace = LexicalMachine.multiple_code_split(self.text[index])
+            index = list_replace(self.text, index, replace)
 
     # According to the requirements, there are actually some global feature such as:
     # 4.1.1.5 All the if/else/for should be followed by a left brace in the new line,
