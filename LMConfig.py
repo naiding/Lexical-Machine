@@ -39,7 +39,7 @@ RUN_LEXICAL_MACHINCE_SHORTCUT = 'Ctrl+R'
 RUN_LEXICAL_MACHINCE_STATUS = 'Run Lexical Machine'
 
 CONFIG_STYLE_ICON = ''
-CONFIG_STYLE_NAME = 'Config style...'
+CONFIG_STYLE_NAME = 'Config style and Run'
 CONFIG_STYLE_SHORTCUT = ''
 CONFIG_STYLE_STATUS = 'Configurate Style'
 

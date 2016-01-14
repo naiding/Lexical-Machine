@@ -212,7 +212,7 @@ class MainWindow(QtGui.QMainWindow):
         self.about_us = QMessageBox()
         self.about_us.setWindowTitle('About us')
         self.about_us.resize(320, 240)
-        self.about_us.setText("""Naiding Zhou:U201313768\nXuanyu Zheng:U201313768\nChenchen Xu:U201313768\n""")
+        self.about_us.setText("""Naiding Zhou : U201313768   \nXuanyu Zheng: U201313731   \nChenchen Xu : U201313768\n   """)
         self.about_us.show()
 
     def run(self):
@@ -276,7 +276,7 @@ class selectStyleWidget(QDialog):
         self.SpecialCharacterLabel = QLabel(self.tr("""Special Characters:(split by ".")"""))
         self.SpecialCharacterEdit = QLineEdit()
 
-        okButton = QPushButton(self.tr("Ok"))
+        okButton = QPushButton(self.tr("Run"))
         detailButton = QPushButton(self.tr("Detail >>"))
         self.connect(okButton,SIGNAL("clicked()"), self.ok)
         self.connect(detailButton,SIGNAL("clicked()"), self.showDetail)
@@ -378,6 +378,8 @@ class selectStyleWidget(QDialog):
         self.configDict['special_character_blank'] = unicode(self.SpecialCharacterEdit.text().toUtf8(), 'utf-8', 'ignore').split('.')
         self.mainWindow.config_style_dict = self.configDict
         self.close()
+        self.mainWindow.run()
+
 
     def showDetail(self):
         if self.detailWidget.isHidden():
