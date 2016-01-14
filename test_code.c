@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <cmath.h>
 
+/* asdasd// */
+
 long fact(int n);
 long rfact (int n);
 

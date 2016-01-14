@@ -49,7 +49,6 @@ class LexicalMachine:
                 self.text.append('<empty>') 
             else:
                 self.text.append(line.strip()) # delete whitespace
-        # print self.text
 
     # Read the style file
     def read_style(self, file):
@@ -128,6 +127,7 @@ class LexicalMachine:
         block_comment_start = re.compile(r'([\s\S]*)/\*[\s\S]*') # "/*"
         block_comment_end = re.compile(r'[\s\S]*\*/([\s\S]*)') # "*/"
         line_comment_start = re.compile(r'([\s\S]*)//[\s\S]*') # "//"
+
         class UnexpectedEndofComment(Exception):
             pass
 
@@ -145,7 +145,11 @@ class LexicalMachine:
             line_match = line_comment_start.match(line)
             end_match = block_comment_end.match(line)
 
-            # /* // */ or /* */ // or // /* */ etc. 6 kinds of combinations
+            #    /* // */
+            # or /* */ //
+            # or // /* */
+            # etc. 6 kinds of combinations
+            # all these three in one line
             if status == "No" and block_match and line_match and end_match:
                 line_start_pos = line.index('//')
                 block_start_pos = line.index('/*')
