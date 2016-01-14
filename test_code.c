@@ -40,7 +40,7 @@ long fact
 {
     long ans;
     for(int i = 1;i < 10;i++) a=b;
-    float a = 1, b = 2, c = 3;
+    float a = 1; int b = 2; long c = 3;
     a = 2; c = 4;; b = 2;
     a = 4; b = a;;;c = a + b;;
     return ans;

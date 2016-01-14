@@ -307,6 +307,15 @@ class LexicalMachine:
     def multiple_code_split(line):
         if line.find("for") == -1:
             split_line = re.sub(r';', ";\n", line).split('\n')
+
+            # reg = re.compile(r"(long|float|int.*)")
+            # reg_match = reg.match(split_line[0])
+            # if reg_match:
+            #     reg_comma = re.compile(r"(.*,.*)")
+            #     reg_comma_match = reg_comma.match(line)
+            #     if reg_comma_match:
+            #         print line
+
         else:
             return [line]
             # li = re.findall(r'for\s*\([\s\S]+?\)', line)
